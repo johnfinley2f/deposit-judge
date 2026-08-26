@@ -1,6 +1,7 @@
 # { "Depends": "py-genlayer:test" }
 from genlayer import *
 import typing
+import json
 
 
 class DepositJudge(gl.Contract):
@@ -45,13 +46,53 @@ class DepositJudge(gl.Contract):
         self.landlord_claim = claim_text
         self.status = "landlord_submitted"
 
-    # Resolution logic (LLM call) comes in Day 2 — this is just a placeholder for now
     @gl.public.write
     def resolve_dispute(self) -> None:
         if self.status != "landlord_submitted":
             raise Exception("Both claims must be submitted before resolving")
-        # TODO Day 2: call LLM here, set verdict_split_tenant_pct and verdict_reasoning
-        raise Exception("resolve_dispute not implemented yet — Day 2 task")
+
+        lease_terms = self.lease_terms
+        tenant_claim = self.tenant_claim
+        landlord_claim = self.landlord_claim
+
+        def nondet() -> str:
+            prompt = f"""
+You are an impartial rental deposit dispute arbitrator.
+
+LEASE TERMS (what was expected at move-out):
+{lease_terms}
+
+TENANT'S CLAIM (their account of the property condition / evidence):
+{tenant_claim}
+
+LANDLORD'S CLAIM (their account of damages / deductions wanted):
+{landlord_claim}
+
+Decide what percentage of the deposit the TENANT should receive back.
+The percentage MUST be one of exactly these values: 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100.
+Pick the closest bucket to your judgment — do not pick any other number.
+
+Respond using ONLY the following JSON format, nothing else, no markdown formatting:
+{{
+    "tenant_pct": int,
+    "reasoning": str
+}}
+The reasoning should be at most 2 sentences explaining the decision.
+"""
+            res = gl.nondet.exec_prompt(prompt)
+            res = res.replace("```json", "").replace("```", "").strip()
+            dat = json.loads(res)
+            # Enforce bucket safety even if model slips
+            allowed = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+            if dat["tenant_pct"] not in allowed:
+                dat["tenant_pct"] = min(allowed, key=lambda x: abs(x - dat["tenant_pct"]))
+            return json.dumps(dat, sort_keys=True)
+
+        result = json.loads(gl.eq_principle.strict_eq(nondet))
+
+        self.verdict_split_tenant_pct = result["tenant_pct"]
+        self.verdict_reasoning = result["reasoning"]
+        self.status = "resolved"
 
     @gl.public.view
     def get_case_summary(self) -> dict:
@@ -77,3 +118,4 @@ class DepositJudge(gl.Contract):
             "landlord_amount": landlord_amount,
             "reasoning": self.verdict_reasoning,
         }
+        
