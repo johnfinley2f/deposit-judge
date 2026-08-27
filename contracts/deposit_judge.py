@@ -1,4 +1,4 @@
-# { "Depends": "py-genlayer:test" }
+# { "Depends": "py-genlayer:1jb45aa8ynh2a9c9xn3b7qqh8sm5q93hwfp7jqmwsfhh8jpz09h6" }
 from genlayer import *
 import typing
 import json
@@ -8,7 +8,7 @@ class DepositJudge(gl.Contract):
     # Case data
     landlord: str
     tenant: str
-    deposit_amount: int          # in smallest currency unit, e.g. cents/wei-equivalent
+    deposit_amount: bigint       # in smallest currency unit, e.g. cents/wei-equivalent
     lease_terms: str             # plain text: what condition was expected at move-out
 
     tenant_claim: str            # tenant's description of condition + evidence (text)
@@ -16,10 +16,10 @@ class DepositJudge(gl.Contract):
 
     status: str                  # "created" -> "tenant_submitted" -> "landlord_submitted" -> "resolved"
 
-    verdict_split_tenant_pct: int   # 0-100, filled in after resolution
+    verdict_split_tenant_pct: bigint   # 0-100, filled in after resolution
     verdict_reasoning: str          # AI's explanation, stored for transparency
 
-    def __init__(self, landlord_address: str, tenant_address: str, deposit_amount: int, lease_terms: str):
+    def __init__(self, landlord_address: str, tenant_address: str, deposit_amount: bigint, lease_terms: str):
         self.landlord = landlord_address
         self.tenant = tenant_address
         self.deposit_amount = deposit_amount
@@ -29,7 +29,7 @@ class DepositJudge(gl.Contract):
         self.landlord_claim = ""
         self.status = "created"
 
-        self.verdict_split_tenant_pct = -1  # -1 means "not yet decided"
+        self.verdict_split_tenant_pct = bigint(-1)  # -1 means "not yet decided"
         self.verdict_reasoning = ""
 
     @gl.public.write
@@ -47,7 +47,7 @@ class DepositJudge(gl.Contract):
         self.status = "landlord_submitted"
 
     @gl.public.write
-    def resolve_dispute(self) -> None:
+    def resolve_dispute(self) -> typing.Any:
         if self.status != "landlord_submitted":
             raise Exception("Both claims must be submitted before resolving")
 
@@ -90,12 +90,12 @@ The reasoning should be at most 2 sentences explaining the decision.
 
         result = json.loads(gl.eq_principle.strict_eq(nondet))
 
-        self.verdict_split_tenant_pct = result["tenant_pct"]
+        self.verdict_split_tenant_pct = bigint(result["tenant_pct"])
         self.verdict_reasoning = result["reasoning"]
         self.status = "resolved"
 
     @gl.public.view
-    def get_case_summary(self) -> dict:
+    def get_case_summary(self) -> typing.Any:
         return {
             "landlord": self.landlord,
             "tenant": self.tenant,
@@ -107,7 +107,7 @@ The reasoning should be at most 2 sentences explaining the decision.
         }
 
     @gl.public.view
-    def get_verdict(self) -> dict:
+    def get_verdict(self) -> typing.Any:
         if self.status != "resolved":
             return {"status": "not yet resolved"}
         tenant_amount = (self.deposit_amount * self.verdict_split_tenant_pct) // 100
