@@ -55,43 +55,42 @@ class DepositJudge(gl.Contract):
         tenant_claim = self.tenant_claim
         landlord_claim = self.landlord_claim
 
-        def nondet() -> str:
-            prompt = f"""
-You are an impartial rental deposit dispute arbitrator.
-
-LEASE TERMS (what was expected at move-out):
+        def get_input() -> str:
+            return f"""LEASE TERMS (what was expected at move-out):
 {lease_terms}
 
 TENANT'S CLAIM (their account of the property condition / evidence):
 {tenant_claim}
 
 LANDLORD'S CLAIM (their account of damages / deductions wanted):
-{landlord_claim}
+{landlord_claim}"""
 
-Decide what percentage of the deposit the TENANT should receive back.
+        raw = gl.eq_principle.prompt_non_comparative(
+            get_input,
+            task="""You are an impartial rental deposit dispute arbitrator. Given the lease terms, tenant's claim, and landlord's claim above, decide what percentage of the deposit the TENANT should receive back.
+
 The percentage MUST be one of exactly these values: 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100.
-Pick the closest bucket to your judgment — do not pick any other number.
 
 Respond using ONLY the following JSON format, nothing else, no markdown formatting:
-{{
+{
     "tenant_pct": int,
     "reasoning": str
-}}
-The reasoning should be at most 2 sentences explaining the decision.
-"""
-            res = gl.nondet.exec_prompt(prompt)
-            res = res.replace("```json", "").replace("```", "").strip()
-            dat = json.loads(res)
-            # Enforce bucket safety even if model slips
-            allowed = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
-            if dat["tenant_pct"] not in allowed:
-                dat["tenant_pct"] = min(allowed, key=lambda x: abs(x - dat["tenant_pct"]))
-            return json.dumps(dat, sort_keys=True)
+}
+The reasoning should be at most 2 sentences explaining the decision.""",
+            criteria="""The response must be valid JSON with exactly the keys "tenant_pct" and "reasoning".
+tenant_pct must be one of: 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100.
+The decision must be a reasonable, fair judgment based on the lease terms and both claims provided — not an arbitrary or clearly biased number.
+The reasoning must be at most 2 sentences and must logically support the chosen percentage.""",
+        )
 
-        result = json.loads(gl.eq_principle.strict_eq(nondet))
+        raw_clean = raw.replace("```json", "").replace("```", "").strip()
+        dat = json.loads(raw_clean)
+        allowed = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+        if dat["tenant_pct"] not in allowed:
+            dat["tenant_pct"] = min(allowed, key=lambda x: abs(x - dat["tenant_pct"]))
 
-        self.verdict_split_tenant_pct = bigint(result["tenant_pct"])
-        self.verdict_reasoning = result["reasoning"]
+        self.verdict_split_tenant_pct = bigint(dat["tenant_pct"])
+        self.verdict_reasoning = dat["reasoning"]
         self.status = "resolved"
 
     @gl.public.view
