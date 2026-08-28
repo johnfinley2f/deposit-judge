@@ -9,13 +9,13 @@ window.addEventListener('unhandledrejection', (e) => {
   document.getElementById('statusText').textContent = "error — see message above";
 });
 
-let createClient, createAccount, simulator;
+let createClient, createAccount, studionet;
 try {
   const mod1 = await import("https://esm.sh/genlayer-js");
   const mod2 = await import("https://esm.sh/genlayer-js/chains");
   createClient = mod1.createClient;
   createAccount = mod1.createAccount;
-  simulator = mod2.simulator;
+  studionet = mod2.studionet;
 } catch (e) {
   document.getElementById('errorBanner').textContent = "Failed to load genlayer-js library: " + e.message;
   document.getElementById('errorBanner').classList.add('show');
@@ -28,7 +28,7 @@ const CONTRACT_ADDRESS = "0xf445b8ecD30c1B0E5db2a63652fe4EB9ef7D5359";
 // ---------------------------------------------------------------
 
 const account = createAccount();
-const client = createClient({ chain: simulator, account });
+const client = createClient({ chain: studionet, account });
 
 const statusText = document.getElementById('statusText');
 const errorBanner = document.getElementById('errorBanner');
@@ -155,7 +155,6 @@ resolveBtn.addEventListener('click', async () => {
       value: 0,
     });
     await client.waitForTransactionReceipt({ hash: tx });
-  
     resolveBtn.textContent = "Ruling Delivered";
     await refreshCase();
   } catch (e) {
