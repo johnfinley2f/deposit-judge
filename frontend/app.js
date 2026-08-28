@@ -155,6 +155,7 @@ resolveBtn.addEventListener('click', async () => {
       value: 0,
     });
     await client.waitForTransactionReceipt({ hash: tx });
+  
     resolveBtn.textContent = "Ruling Delivered";
     await refreshCase();
   } catch (e) {
