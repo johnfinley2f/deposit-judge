@@ -310,8 +310,30 @@
 <footer>ARBITRATED VIA INTELLIGENT CONTRACT · GENLAYER TESTNET</footer>
 
 <script type="module">
-  import { createClient, createAccount } from "https://esm.sh/genlayer-js";
-  import { simulator } from "https://esm.sh/genlayer-js/chains";
+  window.addEventListener('error', (e) => {
+    document.getElementById('errorBanner').textContent = "Script error: " + e.message;
+    document.getElementById('errorBanner').classList.add('show');
+    document.getElementById('statusText').textContent = "error — see message above";
+  });
+  window.addEventListener('unhandledrejection', (e) => {
+    document.getElementById('errorBanner').textContent = "Async error: " + (e.reason?.message || e.reason);
+    document.getElementById('errorBanner').classList.add('show');
+    document.getElementById('statusText').textContent = "error — see message above";
+  });
+
+  let createClient, createAccount, simulator;
+  try {
+    const mod1 = await import("https://esm.sh/genlayer-js");
+    const mod2 = await import("https://esm.sh/genlayer-js/chains");
+    createClient = mod1.createClient;
+    createAccount = mod1.createAccount;
+    simulator = mod2.simulator;
+  } catch (e) {
+    document.getElementById('errorBanner').textContent = "Failed to load genlayer-js library: " + e.message;
+    document.getElementById('errorBanner').classList.add('show');
+    document.getElementById('statusText').textContent = "library load failed";
+    throw e;
+  }
 
   // ---- CONFIG: paste your deployed contract address below ----
   const CONTRACT_ADDRESS = "0xf445b8ecD30c1B0E5db2a63652fe4EB9ef7D5359";
