@@ -12,8 +12,14 @@
 
 <div class="folder-tab">
   <span>CASE FILE — RENTAL DEPOSIT ARBITRATION</span>
-  <strong>GENLAYER</strong>
+  <div class="wallet-mini">
+    <input type="password" id="pkInput" placeholder="Private key (0x...)" />
+    <button id="pkConnectBtn">Connect</button>
+    <button id="guestBtn">Guest</button>
+    <strong>GENLAYER</strong>
+  </div>
 </div>
+<div class="wallet-status" id="walletStatus">Not connected — using a temporary guest account</div>
 
 <header class="masthead">
   <div class="case-no">FILE NO. DJ-001 · INTELLIGENT CONTRACT</div>
@@ -22,15 +28,6 @@
 </header>
 
 <main>
-  <div class="wallet-bar" id="walletBar">
-    <div class="wallet-row">
-      <input type="password" id="pkInput" placeholder="Paste private key (0x...) to sign as yourself" />
-      <button id="pkConnectBtn">Connect</button>
-      <button id="guestBtn">Continue as Guest</button>
-    </div>
-    <div class="wallet-status" id="walletStatus">Not connected — using a temporary guest account</div>
-  </div>
-
   <div class="status-line">Status: <span id="statusText">loading…</span></div>
 
   <div class="error-banner" id="errorBanner"></div>
