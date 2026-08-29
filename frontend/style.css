@@ -129,24 +129,55 @@ body{
   background:var(--parchment-dark);
   border-bottom:1px solid var(--line);
 }
+.sig-identity{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  padding:11px 40px 0;
+  font-family:'Courier Prime', monospace;
+  font-size:12px;
+  color:var(--text-soft);
+  flex-wrap:wrap;
+}
+.sig-identity svg{color:var(--brass); flex-shrink:0;}
+.sig-identity span{flex:1; min-width:160px; word-break:break-all;}
+.sig-identity.connected{color:var(--forest);}
+.sig-identity.connected svg{color:var(--forest);}
+.sig-regen{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  background:none;
+  border:1px solid var(--line);
+  color:var(--text-soft);
+  padding:6px 12px;
+  font-family:'Courier Prime', monospace;
+  font-size:11px;
+  letter-spacing:0.03em;
+  cursor:pointer;
+  transition:background 0.15s ease;
+  flex-shrink:0;
+}
+.sig-regen:hover{background:rgba(0,0,0,0.05); color:var(--ink);}
+.sig-regen svg{color:inherit;}
+
 .sig-toggle{
   width:100%;
   background:none;
   border:none;
-  padding:10px 40px;
+  padding:9px 40px 10px;
   text-align:left;
   cursor:pointer;
   font-family:'Courier Prime', monospace;
-  font-size:12px;
+  font-size:11.5px;
   color:var(--text-soft);
+  opacity:0.8;
   display:flex;
   align-items:center;
-  gap:9px;
+  gap:8px;
 }
 .sig-toggle svg{color:var(--brass); flex-shrink:0;}
-.sig-toggle:hover{color:var(--ink);}
-.sig-toggle.connected{color:var(--forest);}
-.sig-toggle.connected svg:first-child{color:var(--forest);}
+.sig-toggle:hover{opacity:1; color:var(--ink);}
 .sig-toggle .chev{margin-left:auto; transition:transform 0.2s ease; opacity:0.5;}
 .sig-toggle.open .chev{transform:rotate(180deg);}
 
@@ -158,7 +189,6 @@ body{
   flex-wrap:wrap;
 }
 .sig-form.show{display:flex;}
-.sig-form-icon{color:var(--text-soft); flex-shrink:0;}
 .sig-form input{
   flex:1;
   min-width:200px;
@@ -181,8 +211,6 @@ body{
 }
 #pkConnectBtn{background:var(--ink); color:var(--parchment);}
 #pkConnectBtn:hover{opacity:0.85;}
-#guestBtn{background:transparent; color:var(--text-soft); border:1px solid var(--line) !important;}
-#guestBtn:hover{background:rgba(0,0,0,0.04);}
 
 /* ---------- main ---------- */
 main{
@@ -208,7 +236,7 @@ main{
 }
 .status-pill .dot{
   width:7px; height:7px; border-radius:50%;
-  background:var(--brass);
+  background:var(--dot-color, var(--brass));
   box-shadow:0 0 0 3px rgba(185,141,62,0.18);
 }
 
@@ -432,4 +460,5 @@ footer{
 :focus-visible{outline:2px solid var(--brass); outline-offset:2px;}
 @media (prefers-reduced-motion: reduce){
   *{animation:none !important; transition:none !important;}
-}
+  }
+    
