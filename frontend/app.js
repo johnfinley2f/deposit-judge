@@ -37,12 +37,13 @@ function buildClient(pk) {
   client = createClient({ chain: studionet, account });
 }
 
-const sigToggle = document.getElementById('sigToggle');
+const sigIdentity = document.getElementById('sigIdentity');
 const sigLabel = document.getElementById('sigLabel');
+const regenBtn = document.getElementById('regenBtn');
+const sigToggle = document.getElementById('sigToggle');
 const sigForm = document.getElementById('sigForm');
 const pkInput = document.getElementById('pkInput');
 const pkConnectBtn = document.getElementById('pkConnectBtn');
-const guestBtn = document.getElementById('guestBtn');
 
 function shortAddr(addr) {
   return addr.slice(0, 6) + "…" + addr.slice(-4);
@@ -51,10 +52,12 @@ function shortAddr(addr) {
 function setSignedIn(connected) {
   if (connected) {
     sigLabel.textContent = "Signing as " + shortAddr(account.address);
-    sigToggle.classList.add('connected');
+    sigIdentity.classList.add('connected');
+    regenBtn.style.display = "none";
   } else {
-    sigLabel.textContent = "Signing as Guest (" + shortAddr(account.address) + ") — tap to sign with your key";
-    sigToggle.classList.remove('connected');
+    sigLabel.textContent = "Guest wallet: " + shortAddr(account.address);
+    sigIdentity.classList.remove('connected');
+    regenBtn.style.display = "";
   }
 }
 
@@ -89,12 +92,10 @@ pkConnectBtn.addEventListener('click', () => {
   }
 });
 
-guestBtn.addEventListener('click', () => {
+regenBtn.addEventListener('click', () => {
   sessionStorage.removeItem(STORAGE_KEY);
   buildClient(null);
   setSignedIn(false);
-  sigForm.classList.remove('show');
-  sigToggle.classList.remove('open');
   refreshCase();
 });
 
