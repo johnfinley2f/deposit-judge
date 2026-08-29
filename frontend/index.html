@@ -22,6 +22,15 @@
 </header>
 
 <main>
+  <div class="wallet-bar" id="walletBar">
+    <div class="wallet-row">
+      <input type="password" id="pkInput" placeholder="Paste private key (0x...) to sign as yourself" />
+      <button id="pkConnectBtn">Connect</button>
+      <button id="guestBtn">Continue as Guest</button>
+    </div>
+    <div class="wallet-status" id="walletStatus">Not connected — using a temporary guest account</div>
+  </div>
+
   <div class="status-line">Status: <span id="statusText">loading…</span></div>
 
   <div class="error-banner" id="errorBanner"></div>
