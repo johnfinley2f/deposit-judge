@@ -60,6 +60,7 @@ function setSignedIn(connected) {
 
 sigToggle.addEventListener('click', () => {
   sigForm.classList.toggle('show');
+  sigToggle.classList.toggle('open');
 });
 
 // Try to restore a key from this tab's session (never sent anywhere, never persisted to disk)
@@ -81,6 +82,7 @@ pkConnectBtn.addEventListener('click', () => {
     pkInput.value = "";
     setSignedIn(true);
     sigForm.classList.remove('show');
+    sigToggle.classList.remove('open');
     refreshCase();
   } catch (e) {
     showError("Invalid private key: " + e.message);
@@ -92,10 +94,12 @@ guestBtn.addEventListener('click', () => {
   buildClient(null);
   setSignedIn(false);
   sigForm.classList.remove('show');
+  sigToggle.classList.remove('open');
   refreshCase();
 });
 
 const statusText = document.getElementById('statusText');
+const statusPill = document.getElementById('statusPill');
 const errorBanner = document.getElementById('errorBanner');
 const leaseTerms = document.getElementById('leaseTerms');
 const tenantClaim = document.getElementById('tenantClaim');
@@ -125,6 +129,7 @@ async function refreshCase() {
       args: [],
     });
     statusText.textContent = summary.status;
+    statusPill.style.setProperty('--dot-color', summary.status === 'resolved' ? 'var(--forest)' : 'var(--brass)');
     leaseTerms.textContent = summary.lease_terms;
 
     if (summary.status !== "created") {
