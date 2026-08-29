@@ -21,55 +21,68 @@ body{
 .folder-tab{
   background:var(--ink);
   color:var(--parchment);
-  padding:14px 20px;
+  padding:14px 32px;
   display:flex;
   align-items:center;
   justify-content:space-between;
-  flex-wrap:wrap;
-  gap:10px;
   font-family:'Courier Prime', monospace;
   letter-spacing:0.08em;
   font-size:13px;
 }
-.folder-tab strong{color:var(--brass); margin-left:4px;}
-.wallet-mini{
+.folder-tab strong{color:var(--brass);}
+
+.sig-strip{
+  background:var(--parchment-dark);
+  border-bottom:1px solid var(--line);
+}
+.sig-toggle{
+  width:100%;
+  background:none;
+  border:none;
+  padding:9px 32px;
+  text-align:left;
+  cursor:pointer;
+  font-family:'Courier Prime', monospace;
+  font-size:12px;
+  color:#5a5240;
   display:flex;
   align-items:center;
-  gap:6px;
+  gap:8px;
+}
+.sig-toggle:hover{color:var(--ink);}
+.sig-toggle .sig-icon{font-size:14px; color:var(--brass);}
+.sig-toggle.connected .sig-icon{color:var(--forest);}
+.sig-toggle.connected{color:var(--forest);}
+
+.sig-form{
+  display:none;
+  padding:0 32px 14px;
+  gap:8px;
   flex-wrap:wrap;
 }
-.wallet-mini input{
-  width:150px;
-  max-width:40vw;
-  padding:6px 8px;
-  border:1px solid rgba(237,230,214,0.3);
-  background:rgba(255,255,255,0.06);
-  color:var(--parchment);
+.sig-form.show{display:flex;}
+.sig-form input{
+  flex:1;
+  min-width:200px;
+  padding:8px 10px;
+  border:1px solid var(--line);
+  background:#fff;
   font-family:'Courier Prime', monospace;
-  font-size:11px;
+  font-size:12px;
+  color:var(--text);
 }
-.wallet-mini input::placeholder{color:rgba(237,230,214,0.5);}
-.wallet-mini button{
-  padding:6px 12px;
+.sig-form button{
+  padding:8px 16px;
   border:none;
   font-family:'Courier Prime', monospace;
   font-size:11px;
   letter-spacing:0.04em;
   cursor:pointer;
 }
-#pkConnectBtn{background:var(--brass); color:var(--ink);}
-#pkConnectBtn:hover{background:#c49a4d;}
-#guestBtn{background:rgba(237,230,214,0.15); color:var(--parchment);}
-#guestBtn:hover{background:rgba(237,230,214,0.25);}
-.wallet-status{
-  background:var(--ink);
-  color:rgba(237,230,214,0.7);
-  padding:0 20px 10px;
-  font-family:'Courier Prime', monospace;
-  font-size:11px;
-  word-break:break-all;
-}
-.wallet-status.connected{color:#9fd4b0;}
+#pkConnectBtn{background:var(--ink); color:var(--parchment);}
+#pkConnectBtn:hover{background:#2c3f68;}
+#guestBtn{background:transparent; color:#5a5240; border:1px solid var(--line) !important;}
+#guestBtn:hover{background:rgba(0,0,0,0.04);}
 header.masthead{
   max-width:920px;
   margin:0 auto;
