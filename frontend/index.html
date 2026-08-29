@@ -30,6 +30,10 @@
     <circle cx="8" cy="12" r="3.6" stroke="currentColor" stroke-width="1.4" fill="none"/>
     <path d="M11 12h10M17 12v3M20 12v3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
   </symbol>
+  <symbol id="icon-refresh" viewBox="0 0 24 24">
+    <path d="M4 12a8 8 0 0 1 14-5.2M20 12a8 8 0 0 1-14 5.2" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+    <path d="M18 4v4h-4M6 20v-4h4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
 </svg>
 
 <div class="noise-overlay" aria-hidden="true"></div>
@@ -56,16 +60,22 @@
 </header>
 
 <div class="sig-strip">
-  <button class="sig-toggle" id="sigToggle">
+  <div class="sig-identity" id="sigIdentity">
     <svg width="15" height="15"><use href="#icon-quill"/></svg>
-    <span id="sigLabel">Signing as Guest — tap to sign with your key</span>
+    <span id="sigLabel">Generating guest wallet…</span>
+    <button class="sig-regen" id="regenBtn" title="Generate a new guest wallet">
+      <svg width="14" height="14"><use href="#icon-refresh"/></svg>
+      New Guest Wallet
+    </button>
+  </div>
+  <button class="sig-toggle" id="sigToggle">
+    <svg width="14" height="14"><use href="#icon-key"/></svg>
+    <span>Sign in with your own private key instead</span>
     <svg class="chev" width="16" height="16"><use href="#icon-chevron"/></svg>
   </button>
   <div class="sig-form" id="sigForm">
-    <svg width="16" height="16" class="sig-form-icon"><use href="#icon-key"/></svg>
     <input type="password" id="pkInput" placeholder="0x… your private key" />
     <button id="pkConnectBtn">Sign In</button>
-    <button id="guestBtn">Use Guest</button>
   </div>
 </div>
 
