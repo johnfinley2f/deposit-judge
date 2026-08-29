@@ -27,8 +27,56 @@ try {
 const CONTRACT_ADDRESS = "0xf445b8ecD30c1B0E5db2a63652fe4EB9ef7D5359";
 // ---------------------------------------------------------------
 
-const account = createAccount();
-const client = createClient({ chain: studionet, account });
+const STORAGE_KEY = "depositjudge_pk"; // sessionStorage only — cleared when tab closes
+
+let account = null;
+let client = null;
+
+function buildClient(pk) {
+  account = pk ? createAccount(pk) : createAccount();
+  client = createClient({ chain: studionet, account });
+}
+
+const walletStatus = document.getElementById('walletStatus');
+const pkInput = document.getElementById('pkInput');
+const pkConnectBtn = document.getElementById('pkConnectBtn');
+const guestBtn = document.getElementById('guestBtn');
+
+function setWalletStatus(text, connected) {
+  walletStatus.textContent = text;
+  walletStatus.classList.toggle('connected', !!connected);
+}
+
+// Try to restore a key from this tab's session (never sent anywhere, never persisted to disk)
+const savedKey = sessionStorage.getItem(STORAGE_KEY);
+if (savedKey) {
+  buildClient(savedKey);
+  setWalletStatus("Connected as " + account.address, true);
+} else {
+  buildClient(null);
+  setWalletStatus("Not connected — using a temporary guest account (" + account.address + ")");
+}
+
+pkConnectBtn.addEventListener('click', () => {
+  const pk = pkInput.value.trim();
+  if (!pk) return setWalletStatus("Enter a private key first.", false);
+  try {
+    buildClient(pk);
+    sessionStorage.setItem(STORAGE_KEY, pk);
+    pkInput.value = "";
+    setWalletStatus("Connected as " + account.address, true);
+    refreshCase();
+  } catch (e) {
+    setWalletStatus("Invalid private key: " + e.message, false);
+  }
+});
+
+guestBtn.addEventListener('click', () => {
+  sessionStorage.removeItem(STORAGE_KEY);
+  buildClient(null);
+  setWalletStatus("Not connected — using a temporary guest account (" + account.address + ")");
+  refreshCase();
+});
 
 const statusText = document.getElementById('statusText');
 const errorBanner = document.getElementById('errorBanner');
