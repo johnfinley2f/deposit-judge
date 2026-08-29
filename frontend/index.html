@@ -12,14 +12,20 @@
 
 <div class="folder-tab">
   <span>CASE FILE — RENTAL DEPOSIT ARBITRATION</span>
-  <div class="wallet-mini">
-    <input type="password" id="pkInput" placeholder="Private key (0x...)" />
-    <button id="pkConnectBtn">Connect</button>
-    <button id="guestBtn">Guest</button>
-    <strong>GENLAYER</strong>
+  <strong>GENLAYER</strong>
+</div>
+
+<div class="sig-strip">
+  <button class="sig-toggle" id="sigToggle">
+    <span class="sig-icon">✎</span>
+    <span id="sigLabel">Signing as Guest — tap to sign with your key</span>
+  </button>
+  <div class="sig-form" id="sigForm">
+    <input type="password" id="pkInput" placeholder="0x… your private key" />
+    <button id="pkConnectBtn">Sign In</button>
+    <button id="guestBtn">Use Guest Instead</button>
   </div>
 </div>
-<div class="wallet-status" id="walletStatus">Not connected — using a temporary guest account</div>
 
 <header class="masthead">
   <div class="case-no">FILE NO. DJ-001 · INTELLIGENT CONTRACT</div>
