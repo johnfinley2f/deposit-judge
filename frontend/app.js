@@ -37,44 +37,61 @@ function buildClient(pk) {
   client = createClient({ chain: studionet, account });
 }
 
-const walletStatus = document.getElementById('walletStatus');
+const sigToggle = document.getElementById('sigToggle');
+const sigLabel = document.getElementById('sigLabel');
+const sigForm = document.getElementById('sigForm');
 const pkInput = document.getElementById('pkInput');
 const pkConnectBtn = document.getElementById('pkConnectBtn');
 const guestBtn = document.getElementById('guestBtn');
 
-function setWalletStatus(text, connected) {
-  walletStatus.textContent = text;
-  walletStatus.classList.toggle('connected', !!connected);
+function shortAddr(addr) {
+  return addr.slice(0, 6) + "…" + addr.slice(-4);
 }
+
+function setSignedIn(connected) {
+  if (connected) {
+    sigLabel.textContent = "Signing as " + shortAddr(account.address);
+    sigToggle.classList.add('connected');
+  } else {
+    sigLabel.textContent = "Signing as Guest (" + shortAddr(account.address) + ") — tap to sign with your key";
+    sigToggle.classList.remove('connected');
+  }
+}
+
+sigToggle.addEventListener('click', () => {
+  sigForm.classList.toggle('show');
+});
 
 // Try to restore a key from this tab's session (never sent anywhere, never persisted to disk)
 const savedKey = sessionStorage.getItem(STORAGE_KEY);
 if (savedKey) {
   buildClient(savedKey);
-  setWalletStatus("Connected as " + account.address, true);
+  setSignedIn(true);
 } else {
   buildClient(null);
-  setWalletStatus("Not connected — using a temporary guest account (" + account.address + ")");
+  setSignedIn(false);
 }
 
 pkConnectBtn.addEventListener('click', () => {
   const pk = pkInput.value.trim();
-  if (!pk) return setWalletStatus("Enter a private key first.", false);
+  if (!pk) return showError("Enter a private key first.");
   try {
     buildClient(pk);
     sessionStorage.setItem(STORAGE_KEY, pk);
     pkInput.value = "";
-    setWalletStatus("Connected as " + account.address, true);
+    setSignedIn(true);
+    sigForm.classList.remove('show');
     refreshCase();
   } catch (e) {
-    setWalletStatus("Invalid private key: " + e.message, false);
+    showError("Invalid private key: " + e.message);
   }
 });
 
 guestBtn.addEventListener('click', () => {
   sessionStorage.removeItem(STORAGE_KEY);
   buildClient(null);
-  setWalletStatus("Not connected — using a temporary guest account (" + account.address + ")");
+  setSignedIn(false);
+  sigForm.classList.remove('show');
   refreshCase();
 });
 
