@@ -14,13 +14,11 @@ body {
   line-height: 1.6;
 }
 
-/* Paper noise + improved grain */
 .noise-overlay {
   position: fixed; inset: 0; z-index: 1; opacity: 0.45;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
 }
 
-/* Better tab design */
 .tab-shape {
   position: relative; z-index: 3; width: 140px; margin: 0 auto -10px;
   background: linear-gradient(#e4d8be, #f1e9d8); clip-path: polygon(8% 0, 92% 0, 100% 110%, 0% 100%);
@@ -30,20 +28,17 @@ body {
   font-family: 'Courier Prime', monospace; font-size: 12px; letter-spacing: 0.15em; color: #4a3f2f;
 }
 
-/* Header - improved */
 .masthead {
   background: linear-gradient(135deg, #1a2a44, #24365c);
   color: #f5e9d8; padding: 40px 30px 30px; text-align: center;
 }
 .brand-text h1 { font-family: 'Fraunces', serif; font-size: 3rem; margin: 10px 0 8px; letter-spacing: -2px; }
 
-/* Signature strip - cleaner */
 .sig-identity {
   background: #fff; padding: 14px 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08);
 }
 .sig-identity.connected { background: #e8f0e2; }
 
-/* Exhibits - grid + better cards */
 .exhibits {
   display: grid; grid-template-columns: 1fr 1fr; gap: 28px; max-width: 1100px; margin: 0 auto;
 }
@@ -56,7 +51,6 @@ body {
 .card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
 .card-tab { background: var(--accent); color: white; }
 
-/* Verdict stamp - much better */
 .stamp {
   width: 200px; height: 200px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 12px var(--parchment-light),
   0 0 0 18px var(--accent-light), inset 0 0 40px rgba(0,0,0,0.15);
@@ -64,7 +58,6 @@ body {
 }
 @keyframes stampPop { from { transform: scale(0.7); } to { transform: scale(1); } }
 
-/* Buttons - premium feel */
 button {
   padding: 14px 32px; border-radius: 9999px; font-weight: 600; letter-spacing: 0.5px;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -75,7 +68,6 @@ button {
 }
 .resolve-row button:hover { background: #d4ac66; transform: translateY(-3px); box-shadow: 0 12px 0 #8a6a2c; }
 
-/* Verdict box - enhanced */
 .verdict {
   background: white; border: 3px double #b98d3e; padding: 60px 40px; border-radius: 20px;
   max-width: 700px; margin: 40px auto; box-shadow: 0 15px 50px rgba(0,0,0,0.1);
